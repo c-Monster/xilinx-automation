@@ -1,0 +1,16 @@
+#!/usr/bin/expect
+
+set timeout 6000;
+
+set bit [lindex $argv 0];
+set elf [lindex $argv 1]; 
+
+spawn "/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd"
+expect "XMD%" { send "" }
+expect "XMD%" { send "fpga -f $bit\r" }
+expect "XMD%" { send "connect mb mdm\r" }
+expect "XMD%" { send "terminal -jtaguart_server\r" }
+expect "XMD%" { send "dow $elf\r" }
+expect "XMD%" { send "run\r" }
+expect "Clear the buffer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" { send "disconnect 0\r" }
+expect "XMD%" { send "exit\r" }
