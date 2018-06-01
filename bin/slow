@@ -42,8 +42,18 @@ if [ $DEVICE = "control" ] || [ $DEVICE = "burn" ] || [ $DEVICE = "test" ]; then
 
     done
 
+        # characterize again
+        LOGFILE=$RUNDIR"logs/"$DEVICE"/"$DATE"/characterization_"$i".log" 
+
+	if [ $DEVICE = "test" ]; then
+	    echo "characterizing..."
+            characterize.exp $CHRDIR $ELFDIR |& tee $LOGFILE			 
+	else
+	    characterize.exp $CHRDIR $ELFDIR > $LOGFILE
+	fi
+
     # TODO get rid of annoying  character
 else
-    echo "usage: [ control | burn | test ] [ shorts ] [ bitstream ] [ elf file ] "
+    echo "usage: [ control | burn | test ] [ shorts ] "
 fi
 
