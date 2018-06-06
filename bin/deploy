@@ -1,10 +1,28 @@
 #!/usr/bin/expect
 
-set burn [lindex $argv 0];
+# bitfile to deploy
+set bit [lindex $argv 0];
 
+# colors
+set red "\033\[1;31m"
+set green "\033\[0;32m"
+set clr "\033\[0m"
+
+# hide ugly output
+log_user 0
+
+# spawn xmd shell
 spawn "/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd" 
 expect "XMD%" { send "" }
-expect "XMD%" { send "fpga -f $burn\r" }
-expect "XMD%" { send "exit\r" }
+expect "XMD%" { send "fpga -f $bit\r" }
+expect { "*ERROR*" {
+            send_user "${red}failed to deploy ${bit}${clr}\n"
+            exit 2
+                   }
+         "XMD%" { send "exit\r" }
+       }
+
+send_user "${green}successfully deployed ${bit}${clr}\n"
+
 
 
