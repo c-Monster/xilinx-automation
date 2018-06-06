@@ -37,7 +37,7 @@ if [ $DEVICE = "control" ] || [ $DEVICE = "burn" ] || [ $DEVICE = "test" ]; then
 	fi
         
         # burn for one hour
-        burn.exp "/home/adam/RO-PUF/runs/bit/burn_"$TOBURN".bit"
+        burn.exp "/home/adam/RO-PUF/runs/bit/monster_burn.bit"
         sleep 1h
 
     done
