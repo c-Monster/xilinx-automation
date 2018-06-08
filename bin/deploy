@@ -16,13 +16,13 @@ spawn "/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd"
 expect "XMD%" { send "" }
 expect "XMD%" { send "fpga -f $bit\r" }
 expect { "*ERROR*" {
-            send_user "${red}failed to deploy ${bit}${clr}\n"
+            puts stderr "\t${red}failed to deploy ${bit}${clr}\n"
             exit 2
                    }
          "XMD%" { send "exit\r" }
        }
 
-send_user "${green}successfully deployed ${bit}${clr}\n"
+puts stderr "\t${green}successfully deployed ${bit}${clr}\n"
 
 
 
