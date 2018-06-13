@@ -1,0 +1,59 @@
+#!/bin/bash
+
+DEVICE=$1 # arguments
+TOBURN=$2
+
+RUNDIR="/home/adam/RO-PUF/runs/"
+ELFDIR=$RUNDIR"bin/csv.elf"
+CHRDIR=$RUNDIR"bit/inv49Puf.bit"
+
+if [ -z $DEVICE ] || [ -z $TOBURN ]; then
+
+    echo "usage: [ control | burn | test ] [ shorts ] "
+fi
+
+if [ $TOBURN -lt 0 ] || [ $TOBURN -gt 7 ]; then
+
+    echo "usage: [ control | burn | test ] [ shorts ] "
+fi
+
+if [ $DEVICE = "control" ] || [ $DEVICE = "burn" ] || [ $DEVICE = "test" ]; then
+
+    DATE=$( date '+%m.%d.%y-%H.%M' )
+
+    for i in {0..3}; do 
+
+	# make log directory
+	mkdir -p $RUNDIR"logs/"$DEVICE"/"$DATE
+
+        # characterize 
+        LOGFILE=$RUNDIR"logs/"$DEVICE"/"$DATE"/characterization_"$i".log" 
+
+	if [ $DEVICE = "test" ]; then
+	    echo "characterizing..."
+            char $CHRDIR $ELFDIR |& tee $LOGFILE			 
+	else
+	    char $CHRDIR $ELFDIR > $LOGFILE
+	fi
+        
+        # burn for one hour
+        deploy "/home/adam/RO-PUF/runs/bit/"$TOBURN
+        sleep 5s
+
+    done
+
+        # characterize again
+        LOGFILE=$RUNDIR"logs/"$DEVICE"/"$DATE"/characterization_"$i".log" 
+
+	if [ $DEVICE = "test" ]; then
+	    echo "characterizing..."
+            char $CHRDIR $ELFDIR |& tee $LOGFILE			 
+	else
+	    char $CHRDIR $ELFDIR > $LOGFILE
+	fi
+
+    # TODO get rid of annoying character
+else
+    echo "usage: [ control | burn | test ] [ shorts ] "
+fi
+

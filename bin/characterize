@@ -1,0 +1,34 @@
+#!/usr/bin/expect
+
+set timeout 180;
+
+set bit [lindex $argv 0];
+set elf [lindex $argv 1]; 
+
+set red "\033\[1;31m"
+set grn "\033\[1;32m"
+set clr "\033\[0m"
+
+
+spawn "/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd"
+expect "XMD%" { send "" }
+expect "XMD%" { send "fpga -f $bit\r" }
+expect { 
+        "*ERROR*" { 
+            puts stderr "\t${red}failed to deploy bitstream${clr}\n"
+            exit 2 
+                  } 
+        "XMD%" { 
+            puts stderr "\t${grn}successfully deployed charaterization bitstream \(I might be lying\) ${clr}\n"
+            send "connect mb mdm\r"
+               }
+       }
+expect "XMD%" { send "terminal -jtaguart_server\r" }
+expect "XMD%" { send "dow $elf\r" }
+
+expect "XMD%" { send "run\r" }
+expect "*done*" { 
+                puts stderr "\t${grn}successfully finished characterization${clr}\n"
+                send "disconnect 0\r" }
+
+expect "XMD%" { send "exit\r" }

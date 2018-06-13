@@ -1,0 +1,3 @@
+#!/usr/bin/expect
+
+puts stderr "hello from cMonster"

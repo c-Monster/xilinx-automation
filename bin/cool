@@ -39,6 +39,10 @@ if [ $DEVICE = "control" ] || [ $DEVICE = "burn" ] || [ $DEVICE = "test" ]; then
         # burn for one hour
         deploy $RUNDIR"/bit/"$TOBURN
         sleep 1h
+	
+	# allow to cool
+	deploy $RUNDIR"/bit/blank.bit"
+	sleep 10m
 
         # characterize 
         LOGFILE=$LOGSDIR/"characterization_"$i".log" 
@@ -51,6 +55,13 @@ if [ $DEVICE = "control" ] || [ $DEVICE = "burn" ] || [ $DEVICE = "test" ]; then
 	fi
 
     done
+
+    # allow to cool (again)
+    deploy $RUNDIR"/bit/blank.bit"
+    sleep 10m
+
+    # create plot
+    plot $DEVICE
 
 
     # TODO get rid of annoying character
