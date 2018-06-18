@@ -14,25 +14,33 @@ class colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def main():
-
-    print colors.WARNING + "starting characterization" + colors.ENDC
-
+def deploy(bitfile, outfile):
+    
     child = pexpect.spawn('/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd') # spawn new ssh session
-    outfile = open('log.txt', 'wb')
     child.logfile = outfile
 
-    child.expect('XMD%') 
-    child.sendline('exit')
+    child.expect('XMD%')
+    child.expect('XMD%')
+    command = "fpga -f %s" % bitfile
+    child.sendline(command)
 
-#    child.interact()
-#    child.expect('\S*\r\n ')
-#    print child.before
-#    print child.after
+    child.expect('XMD%')
+    child.sendline('exit')
+    
+
+def main():
+
+    print colors.WARNING + "starting characterization..." + colors.ENDC
+
+    outfile = open('monsterLog.txt', 'wb')
+    bitstream = sys.argv[1];
+
+    deploy(bitstream, outfile)
 
     print colors.WARNING + "finished characterization" + colors.ENDC
 
 if __name__ == '__main__':
+    print colors.WARNING + "starting single deployment" + colors.ENDC
     main()
 else:
-    print colors.WARNING + "erroneously importing main!"
+    print colors.WARNING + "importing module" + colors.ENDC
