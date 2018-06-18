@@ -1,0 +1,44 @@
+#!/usr/bin/env python 
+
+import sys
+import pexpect
+import getpass
+
+class colors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+def main():
+
+    print colors.WARNING + "starting characterization" + colors.ENDC
+
+    child = pexpect.spawn('ssh cmonster@phoenix') # spawn new ssh session
+
+    # match 0 or more capture groups of 0 or more non-whitespace characters 
+    # followed by 0 or more whitespace characters 
+    # terminated by a carriage return
+    child.expect('[\S*\s]*\r\n') 
+    child.sendline('cdr')
+    child.expect('\r\n')
+#    print child.before
+
+    child.sendline('ls')
+    child.expect('\r\n')
+    print child.before
+#    child.interact()
+#    child.expect('\S*\r\n ')
+#    print child.before
+#    print child.after
+
+    print colors.WARNING + "finished characterization" + colors.ENDC
+
+if __name__ == '__main__':
+    main()
+else:
+    print colors.WARNING + "erroneously importing main!"
