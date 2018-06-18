@@ -18,19 +18,13 @@ def main():
 
     print colors.WARNING + "starting characterization" + colors.ENDC
 
-    child = pexpect.spawn('ssh cmonster@phoenix') # spawn new ssh session
+    child = pexpect.spawn('xmd') # spawn new ssh session
+    outfile = open('log.txt', 'wb')
+    child.logfile = outfile
 
-    # match 0 or more capture groups of 0 or more non-whitespace characters 
-    # followed by 0 or more whitespace characters 
-    # terminated by a carriage return
-    child.expect('[\S*\s]*\r\n') 
-    child.sendline('cdr')
-    child.expect('\r\n')
-#    print child.before
+    child.expect('XMD%') 
+    child.sendline('exit')
 
-    child.sendline('ls')
-    child.expect('\r\n')
-    print child.before
 #    child.interact()
 #    child.expect('\S*\r\n ')
 #    print child.before
