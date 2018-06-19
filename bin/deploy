@@ -5,8 +5,11 @@ set bit [lindex $argv 0];
 
 # colors
 set red "\033\[1;31m"
-set green "\033\[0;32m"
+set green "\033\[1;32m"
 set clr "\033\[0m"
+
+# hide stdout
+log_user 0
 
 # spawn xmd shell
 spawn "/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd" 
