@@ -1,0 +1,47 @@
+run
+Processor started. Type "stop" to stop processor
+
+RUNNING> 0
+XMD% 
+Attempt 0:, Attempt 1:, Attempt 2:, Average
+, , , 
+
+done
+run
+Processor started. Type "stop" to stop processor
+
+RUNNING> 0
+XMD% 
+Attempt 0:, Attempt 1:, Attempt 2:, Average
+, , , 
+
+done
+run
+Processor started. Type "stop" to stop processor
+
+RUNNING> 0
+XMD% 
+Attempt 0:, Attempt 1:, Attempt 2:, Average
+, , , 
+
+done
+run
+Processor started. Type "stop" to stop processor
+
+RUNNING> 0
+XMD% 
+Attempt 0:, Attempt 1:, Attempt 2:, Average
+, , , 
+
+done
+run
+Processor started. Type "stop" to stop processor
+
+RUNNING> 0
+XMD% run
+Error: Invalid xmd target: -1
+Use "targets" command to get current list of targets or change target
+Use "connect mb" command to connect to a MicroBlaze target
+Use "connect ppc" command to connect to a PowerPC target
+Use "connect arm" command to connect to a ARM Cortex A9 target
+XMD% 
