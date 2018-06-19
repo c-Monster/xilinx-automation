@@ -1,0 +1,20 @@
+run
+Processor started. Type "stop" to stop processor
+
+RUNNING> 0
+XMD% Rankings
+Attempt 0:, 1, 0, 2, 3, 4, 5, 6, 7
+Attempt 1:, 1, 0, 2, 3, 4, 5, 6, 7
+Attempt 2:, 1, 0, 2, 3, 4, 5, 6, 7
+
+Frequency (Assuming rankings never changed), Attempt 0, Attempt 1, Attempt 2, Average 
+Ring 1, 377875878, 377855595, 377836861, 377856111
+Ring 0, 377504817, 377475321, 377453941, 377478026
+Ring 2, 373594286, 373568653, 373560982, 373574639
+Ring 3, 2, 3, 5, 2
+Ring 4, 2, 3, 5, 2
+Ring 5, 2, 3, 5, 2
+Ring 6, 2, 3, 5, 2
+Ring 7, 2, 3, 5, 2
+done
+
