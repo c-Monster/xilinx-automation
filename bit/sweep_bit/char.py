@@ -57,16 +57,15 @@ def runCharacterization(bit, elf):
     xmd.expect('XMD%')
     xmd.sendline('exit') 
     contents = logStream.getvalue()
-    print contents
     return contents
 
 def extractValue(logStr):
     reg = getRegex()
-    return reg.findall(logStr)
+    return reg.search(logStr).group()
 
 # builds the regex used to extract the frequency
 def getRegex():
-    return re.compile('([0-9]+[\n])')
+    return re.compile('([0-9][0-9]+[\r\r\n])')
 
 debug = False
 def setDebug(state):

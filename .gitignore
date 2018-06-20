@@ -1,5 +1,8 @@
 logs/*
 archive/*
-.log
-.swp
+*.log
+*.swp
+*.pyc
+*.json
+
 
