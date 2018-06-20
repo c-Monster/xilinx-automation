@@ -7,12 +7,18 @@ import cStringIO as string
 
 import common
 
-debug = False
+def main():
 
-def setDebug(state):
-	debug = state
+    # arguments
+    bitstream = sys.argv[1]
+    elf = sys.argv[2]
 
-def runCharacterization(bit, elf, out, reg):
+    # open log file with write permissions
+    logfile = open(sys.argv[3], 'w')
+
+    print runCharacterization(bitstream, elf, logfile, p)
+
+def runCharacterization(bit, elf):
 
     # spawn new xmd session
     xmd = pexpect.spawn(common.XMD)  
@@ -52,20 +58,19 @@ def runCharacterization(bit, elf, out, reg):
     xmd.sendline('exit') 
     contents = logStream.getvalue()
     print contents
-    out.write(contents)
-    return reg.findall(contents)
+    return contents
 
-def main():
+def extractValue(logStr):
+    reg = getRegex()
+    return reg.findall(logStr)
 
-    # arguments
-    bitstream = sys.argv[1]
-    elf = sys.argv[2]
+# builds the regex used to extract the frequency
+def getRegex():
+    return re.compile('([0-9]+[\n])')
 
-    # open log file with write permissions
-    logfile = open(sys.argv[3], 'w')
-
-    p = re.compile('([0-9]+[\n])')
-    print runCharacterization(bitstream, elf, logfile, p)
+debug = False
+def setDebug(state):
+	debug = state
 
 if __name__ == '__main__':
     main()
