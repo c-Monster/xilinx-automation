@@ -1,45 +1,56 @@
 #!/usr/bin/env python
 
 import sys
+import re
 import pexpect
+import cStringIO as string
 
 import common
 
-def characterize(bit, elf, out):
+debug = False
 
-    # spawn new ssh session
-    child = pexpect.spawn(common.XMD)  
-    child.expect('XMD%')
-    child.expect('XMD%')
+def setDebug(state):
+	debug = state
+
+def runCharacterization(bit, elf, out, reg):
+
+    # spawn new xmd session
+    xmd = pexpect.spawn(common.XMD)  
+    xmd.expect('XMD%')
+    xmd.expect('XMD%')
  
-    # build and send command
+    # program FPGA with bitstream
     command = "fpga -f %s" % bit
-    child.sendline(command)
-    child.expect('XMD%')
+    xmd.sendline(command)
+    xmd.expect('XMD%')
     print common.OKGREEN + 'downloaded %s' % bit + common.ENDC
     
-    child.sendline('connect mb mdm')
-    child.expect('XMD%')
-    print common.OKGREEN + 'connected to MDM UART target' + common.ENDC
+	# connect to MDM
+    xmd.sendline('connect mb mdm')
+    xmd.expect('XMD%')
+    print common.OKGREEN + 'connected to MDM' + common.ENDC
         
-    child.sendline('terminal -jtaguart_server')
-    child.expect('XMD%')
+    xmd.sendline('terminal -jtaguart_server')
+    xmd.expect('XMD%')
     print common.OKGREEN + 'started JTAG server' + common.ENDC
  
+ 	# download ELF file
     command = "dow %s" % elf
-    child.sendline(command)
-    child.expect('XMD%')
-    print common.OKGREEN + 'downloaded %s' % elf + common.ENDC
-    
-    child.sendline('run')
-    child.logfile = out
-    child.expect('done', timeout = 120)
-    child.logfile = None
-    print common.OKGREEN + 'successfully characterized' + common.ENDC
-        
-    child.sendline('disconnect 0')
-    child.expect('XMD%')
-    child.sendline('exit')
+    xmd.sendline(command)
+    xmd.expect('XMD%')
+    print common.OKGREEN + 'downloaded %s' % elf + common.ENDC 
+
+    with string.StringIO() as logStream, open(out, 'a+') as outfile:
+        xmd.sendline('run')
+        xmd.logfile = logStream
+        xmd.expect('done', timeout = 120)
+        xmd.logfile = None
+        print common.OKGREEN + 'successfully characterized' + common.ENDC
+        xmd.sendline('disconnect 0')
+        xmd.expect('XMD%')
+        xmd.sendline('exit') 
+        logStream.seek(0)
+    	return reg.findall(logStream.read())
 
 def main():
 
@@ -50,10 +61,8 @@ def main():
     # open log file with write permissions
     logfile = open(sys.argv[3], 'w')
 
-    characterize(bitstream, elf, logfile)
+    p = re.compile('([0-9]+[\n])')
+    print characterize(bitstream, elf, logfile, p)
 
 if __name__ == '__main__':
     main()
-
-
-
