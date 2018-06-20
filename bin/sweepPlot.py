@@ -1,9 +1,36 @@
 #!/usr/bin/python3
 
 import sys
+import json
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+def main():
+
+    readFile = sys.argv[1]
+    writeFile = sys.argv[2]
+
+    with open(readFile, 'r') as inFile:
+        contents = inFile.read()
+        jsonInput = json.loads(contents)
+
+        toPlot = []
+        i = 0
+        while (i < len(jsonInput)):
+            key = str(i)
+            value = jsonInput[key]
+            toPlot.append(int(value))
+            i += 1
+
+        Plot(toPlot, writeFile)
+
+def Plot(intList, outFile):
+    	plt.plot(range(len(intList)), intList)
+	plt.xlabel("Row")
+	plt.ylabel("Speed")
+	plt.title("FPGA Sweep")
+	plt.savefig(outFile)
 
 #creates a dummy dictionary for testing purposes
 def DummyDictionary(size) : 
@@ -40,12 +67,12 @@ def Test() :
 	print "a plot has been saved to plot.png"
 	
 
-if len(sys.argv) == 1 : #if no arguments are given then run the test
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
 	print "test begun"
 	Test()
-#todo : add functionality to read a dictionary from a file
-else :
-	print "error" 
 
+    else:
+        main()
 
 
