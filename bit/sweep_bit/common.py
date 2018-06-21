@@ -11,4 +11,7 @@ UNDERLINE = '\033[4m'
 
 XMD = '/opt/Xilinx/14.4/ISE_DS/EDK/bin/lin64/xmd'
 
+HOURS = 3600
+MINUTES = 60
+
 
