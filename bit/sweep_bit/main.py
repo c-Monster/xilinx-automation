@@ -7,8 +7,8 @@ import json
 import common
 import char
 
-cols = 1 
-rows = 1 
+cols = 24 
+rows = 4 
 
 def main():
 
@@ -25,7 +25,7 @@ def main():
 				# get bitstream
 				key = (j * cols) + i
 				bit = 'sweep_%d' % key
-				log.write('\n\n' + bit + '\n')
+				log.write('\n\n%%%%%%' + bit + '%%%%%%\n\n')
 				print common.OKGREEN + 'characterizing ' + bit + common.ENDC
 
 				# run characterization
