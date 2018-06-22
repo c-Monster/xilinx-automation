@@ -3,6 +3,7 @@
 import sys
 import re
 import pexpect
+import time
 import cStringIO as string
 
 import common
@@ -66,6 +67,20 @@ def extractValue(logStr):
 # builds the regex used to extract the frequency
 def getRegex():
     return re.compile('([0-9][0-9]+[\r\r\n])')
+
+def coolDown(interval):
+
+	xmd = pexpect.spawn(common.XMD)
+
+	xmd.expect('XMD%')
+   	xmd.expect('XMD%')
+
+	xmd.sendline("fpga -f blank.bit")
+	xmd.expect('XMD%')
+	print common.OKGREEN + 'downloaded blank bitstream' + common.ENDC
+
+	time.sleep(interval)
+	print common.OKGREEN + 'done cooling down' + common.ENDC
 
 debug = False
 def setDebug(state):

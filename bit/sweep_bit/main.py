@@ -6,7 +6,7 @@ import json
 import time
 
 import common
-import char
+import xil
 
 def main():
 
@@ -23,7 +23,9 @@ def main():
 
     results = {}
     with open('sweep.log', 'w') as log:
-        for i in range(int(osc)):
+        i = int(osc)
+        while (i > 0):
+            i -= 1
 
             # get bitstream
             key = i
@@ -32,17 +34,20 @@ def main():
             print common.OKGREEN + 'characterizing ' + bit + common.ENDC
 
             # run characterization
-            result = char.runCharacterization(bit, elf)
+            result = xil.runCharacterization(bit, elf)
             print result
             log.write(result)
 
             # extract value
-            value = char.extractValue(result)
+            value = xil.extractValue(result)
             results[key] = value
 
     # dump json
     with open('sweep.json', 'w') as output:
 	output.write(json.dumps(results))
+
+    # print time
+    printTime(time.time() - start_time)
 
 def printTime(seconds):
 
