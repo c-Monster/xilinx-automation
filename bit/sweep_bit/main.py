@@ -14,12 +14,13 @@ def main():
     start_time = time.time()
 
     # arguments
-    if len(sys.argv) < 3:
-        print common.FAIL + "ERROR: must specify sweep file and number of tiles" + common.ENDC
+    if len(sys.argv) < 4:
+        print common.FAIL + "ERROR: must specify sweep file, number of tiles, and cooldown time (in seconds) for each characterization" + common.ENDC
         sys.exit(1)
 
     elf = sys.argv[1]
     osc = sys.argv[2]
+    tim = sys.argv[3]
 
     results = {}
     with open('sweep.log', 'w') as log:
@@ -29,7 +30,7 @@ def main():
 
             # get bitstream
             key = i
-            bit = 'sweep_%d' % key
+            bit = 'sweep_%d.bit' % key
             log.write('\n\n%%%%%%' + bit + '%%%%%%\n\n')
             print common.OKGREEN + 'characterizing ' + bit + common.ENDC
 
@@ -41,6 +42,9 @@ def main():
             # extract value
             value = xil.extractValue(result)
             results[key] = value
+
+            # cool 
+            xil.coolDown(tim)
 
     # dump json
     with open('sweep.json', 'w') as output:

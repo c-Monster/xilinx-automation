@@ -23,6 +23,7 @@ def runCharacterization(bit, elf):
 
     # spawn new xmd session
     xmd = pexpect.spawn(common.XMD)  
+    #xmd.logfile = sys.stdout
     xmd.expect('XMD%')
     xmd.expect('XMD%')
  
@@ -79,7 +80,7 @@ def coolDown(interval):
 	xmd.expect('XMD%')
 	print common.OKGREEN + 'downloaded blank bitstream' + common.ENDC
 
-	time.sleep(interval)
+	time.sleep(float(interval))
 	print common.OKGREEN + 'done cooling down' + common.ENDC
 
 debug = False
