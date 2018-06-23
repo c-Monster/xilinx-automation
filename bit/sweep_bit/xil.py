@@ -10,71 +10,73 @@ import common
 
 def main():
 
-    # arguments
-    bitstream = sys.argv[1]
-    elf = sys.argv[2]
+	# arguments
+	bitstream = sys.argv[1]
+	elf = sys.argv[2]
 
-    # open log file with write permissions
-    logfile = open(sys.argv[3], 'w')
-
-    print runCharacterization(bitstream, elf, logfile, p)
+	print runCharacterization(bitstream, elf)
 
 def runCharacterization(bit, elf):
 
-    # spawn new xmd session
-    xmd = pexpect.spawn(common.XMD)  
-    #xmd.logfile = sys.stdout
-    xmd.expect('XMD%')
-    xmd.expect('XMD%')
- 
-    # program FPGA with bitstream
-    command = "fpga -f %s" % bit
-    xmd.sendline(command)
-    xmd.expect('XMD%')
-    print common.OKGREEN + 'downloaded %s' % bit + common.ENDC
-    
+	# spawn new xmd session
+	xmd = pexpect.spawn(common.XMD)  
+	#xmd.logfile = sys.stdout
+	xmd.expect('XMD%')
+	xmd.expect('XMD%')
+
+	# program FPGA with bitstream
+	command = "fpga -f %s" % bit
+	xmd.sendline(command)
+	xmd.expect('XMD%')
+	print common.OKGREEN + 'downloaded %s' % bit + common.ENDC
+
 	# connect to MDM
-    xmd.sendline('connect mb mdm')
-    xmd.expect('XMD%')
-    print common.OKGREEN + 'connected to MDM' + common.ENDC
-        
-    xmd.sendline('terminal -jtaguart_server')
-    xmd.expect('XMD%')
-    print common.OKGREEN + 'started JTAG server' + common.ENDC
- 
- 	# download ELF file
-    command = "dow %s" % elf
-    xmd.sendline(command)
-    xmd.expect('XMD%')
-    print common.OKGREEN + 'downloaded %s' % elf + common.ENDC 
+	xmd.sendline('connect mb mdm')
+	xmd.expect('XMD%')
+	print common.OKGREEN + 'connected to MDM' + common.ENDC
 
-    logStream = string.StringIO()
-    xmd.sendline('run')
-    xmd.logfile = logStream
-    xmd.expect('done', timeout = 120)
-    xmd.logfile = None
-    print common.OKGREEN + 'successfully characterized' + common.ENDC
+	xmd.sendline('terminal -jtaguart_server')
+	xmd.expect('XMD%')
+	print common.OKGREEN + 'started JTAG server' + common.ENDC
 
-    xmd.sendline('disconnect 0')
-    xmd.expect('XMD%')
-    xmd.sendline('exit') 
-    contents = logStream.getvalue()
-    return contents
+	# download ELF file
+	command = "dow %s" % elf
+	xmd.sendline(command)
+	xmd.expect('XMD%')
+	print common.OKGREEN + 'downloaded %s' % elf + common.ENDC 
+
+	logStream = string.StringIO()
+	xmd.sendline('run')
+	xmd.logfile = logStream
+	xmd.expect('done', timeout = 120)
+	xmd.logfile = None
+	print common.OKGREEN + 'successfully characterized' + common.ENDC
+
+	xmd.sendline('disconnect 0')
+	xmd.expect('XMD%')
+	xmd.sendline('exit') 
+	contents = logStream.getvalue()
+	return contents
 
 def extractValue(logStr):
-    reg = getRegex()
-    return reg.search(logStr).group()
+	reg = getRegex()
+	result = reg.search(logStr)
+	if result == None:
+		return "not found"
+	else:
+		return result.group()
+
 
 # builds the regex used to extract the frequency
 def getRegex():
-    return re.compile('([0-9][0-9]+[\r\r\n])')
+	return re.compile('([0-9][0-9]+[\r\r\n])')
 
 def coolDown(interval):
 
 	xmd = pexpect.spawn(common.XMD)
 
 	xmd.expect('XMD%')
-   	xmd.expect('XMD%')
+	xmd.expect('XMD%')
 
 	xmd.sendline("fpga -f blank.bit")
 	xmd.expect('XMD%')
@@ -88,4 +90,4 @@ def setDebug(state):
 	debug = state
 
 if __name__ == '__main__':
-    main()
+	main()

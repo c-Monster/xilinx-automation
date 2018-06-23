@@ -14,13 +14,13 @@ def main():
     start_time = time.time()
 
     # arguments
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 3:
         print common.FAIL + "ERROR: must specify sweep file, number of tiles, and cooldown time (in seconds) for each characterization" + common.ENDC
         sys.exit(1)
 
     elf = sys.argv[1]
     osc = sys.argv[2]
-    tim = sys.argv[3]
+    #tim = sys.argv[3]
 
     results = {}
     with open('sweep.log', 'w') as log:
@@ -44,7 +44,7 @@ def main():
             results[key] = value
 
             # cool 
-            xil.coolDown(tim)
+            #xil.coolDown(tim)
 
     # dump json
     with open('sweep.json', 'w') as output:
