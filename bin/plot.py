@@ -14,8 +14,10 @@ NUM_OSCILLATORS = 8
 
 
 def everything_else(command, latest_folder):
+
     print("Creating Plot...")
 
+    # List of lists to hold average counts
     averages = create_averages(NUM_OSCILLATORS)
 
     # Iterate through all .log files
@@ -63,14 +65,13 @@ def get_most_recent_run(command):
     return latest_folder
 
 
-# List of lists to hold average counts
 def create_averages(num_oscillators):
+    # List of lists to hold average counts
     return [[] for _ in range(num_oscillators)]
 
 
-
-# Make sure the rankings are consistent
 def compare_attempts(attempts):
+    # Make sure the rankings are consistent
     attempt0 = attempts[0].split(':')[1]
     attempt1 = attempts[1].split(':')[1]
     attempt2 = attempts[2].split(':')[1]
