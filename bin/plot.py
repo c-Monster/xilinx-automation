@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 NUM_OSCILLATORS = 8
 
 
-def everything_else(command, latest_folder):
+def calculate_averages(command, latest_folder):
 
     print("Creating Plot...")
 
     # List of lists to hold average counts
-    averages = create_averages(NUM_OSCILLATORS)
+    averages = create_empty_averages(NUM_OSCILLATORS)
 
     # Iterate through all .log files
     for filename in sorted(glob.glob(latest_folder + '/*.log')):
@@ -77,7 +77,7 @@ def get_most_recent_run(command):
     return latest_folder
 
 
-def create_averages(num_oscillators):
+def create_empty_averages(num_oscillators):
     # List of lists to hold average counts
     return [[] for _ in range(num_oscillators)]
 
@@ -117,11 +117,10 @@ def parse_args():
 
 
 def main():
-    # all the other stuff...
     args = parse_args()
     command = args.command
     latest_folder = get_most_recent_run(command)
-    averages = everything_else(command, latest_folder)
+    averages = calculate_averages(command, latest_folder)
     plot_averages(averages)
     save_plot(latest_folder)
 
