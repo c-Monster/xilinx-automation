@@ -35,9 +35,9 @@ def everything_else(command, latest_folder):
 
         # Script only works if the ranking don't intermittently change..
         # Let's fix the .elf so that we don't have this problem
-        if not (compare_attempts(attempts)):
+        if not compare_attempts(attempts):
             print("Rankings inconsistent. Exiting...")
-            sys.exit(1)
+            exit(1)
 
 
         # Split the CSV data and get the ring oscillator number and average
@@ -55,13 +55,12 @@ def create_attempts_and_counts(lines):
     attempts = []
     counts = []
     for line in lines:
-        if line.find("Attempt") != -1:
-            if line.find("Frequency") == -1:
+        if "Attempt" in line:
+            if "Frequency" in line:
                 attempts.append(line)
-            if line.find("Ring") != -1:
+            if "Ring" in line:
                 counts.append(line)
     return attempts, counts
-
 
 
 def get_most_recent_run(command):
@@ -92,9 +91,9 @@ def compare_attempts(attempts):
 
 def plot_averages(averages):
     # Plot averages
-    x_axis = [4*i for i in range(0,len(averages[0]))]
+    x_axis = [4*i for i in range(len(averages[0]))]
     for average in averages:
-        plt.plot(x_axis,average)
+        plt.plot(x_axis, average)
 
 
 def save_plot(latest_folder):
