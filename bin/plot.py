@@ -10,21 +10,13 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
+NUM_OSCILLATORS = 8
+
+
 def everything_else(command, latest_folder):
     print("Creating Plot...")
 
-    # # Correct usage: python3 plot.py {burn|control|test}
-    # if len(sys.argv) != 2:
-    #     print("Incorrect number arguments given. Exiting the program")
-    #     print(len(sys.argv))
-    #     sys.exit()
-
-
-    # List of lists to hold average counts
-    averages = []
-    num_oscillators = 8
-    for i in range(num_oscillators):
-        averages.append([])
+    averages = create_averages(NUM_OSCILLATORS)
 
     # Iterate through all .log files
     for filename in sorted(glob.glob(latest_folder + '/*.log')):
@@ -69,6 +61,12 @@ def get_most_recent_run(command):
     list_of_folders = glob.glob(directory + "*")
     latest_folder = max(list_of_folders, key=os.path.getctime) + "/"
     return latest_folder
+
+
+# List of lists to hold average counts
+def create_averages(num_oscillators):
+    return [[] for _ in range(num_oscillators)]
+
 
 
 # Make sure the rankings are consistent
