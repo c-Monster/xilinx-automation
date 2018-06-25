@@ -22,32 +22,36 @@ def everything_else(command, latest_folder):
 
     # Iterate through all .log files
     for filename in sorted(glob.glob(latest_folder + '/*.log')):
-        if not filename.endswith(".log"):
-            continue
-        if filename.endswith("characterization_0.log"):
-            #continue
-            pass
-        print(filename)
-        f = open(filename,"r")
-        lines = f.readlines()
-        
-        attempts, counts = create_attempts_and_counts(lines)
-
-        # Script only works if the ranking don't intermittently change..
-        # Let's fix the .elf so that we don't have this problem
-        if not compare_attempts(attempts):
-            print("Rankings inconsistent. Exiting...")
-            exit(1)
-
-
-        # Split the CSV data and get the ring oscillator number and average
-        for line in counts:
-            split = line.split(',')
-            ringosc_no = int(split[0][-1])
-            average = int(split[-1].strip())
-            averages[ringosc_no].append(average)
+        process_log_file(filename)
 
     return averages
+
+
+def process_log_file(filename, averages):
+    if not filename.endswith(".log"):
+        return
+    if filename.endswith("characterization_0.log"):
+        #continue
+        pass
+    print(filename)
+    f = open(filename,"r")
+    lines = f.readlines()
+
+    attempts, counts = create_attempts_and_counts(lines)
+
+    # Script only works if the ranking don't intermittently change..
+    # Let's fix the .elf so that we don't have this problem
+    if not compare_attempts(attempts):
+        print("Rankings inconsistent. Exiting...")
+        exit(1)
+
+
+    # Split the CSV data and get the ring oscillator number and average
+    for line in counts:
+        split = line.split(',')
+        ringosc_no = int(split[0][-1])
+        average = int(split[-1].strip())
+        averages[ringosc_no].append(average)
 
 
 def create_attempts_and_counts(lines):
@@ -81,7 +85,7 @@ def compare_attempts(attempts):
     attempt0 = attempts[0].split(':')[1]
     attempt1 = attempts[1].split(':')[1]
     attempt2 = attempts[2].split(':')[1]
-    
+
     if attempt0 != attempt1:
         return False
     if attempt1 != attempt2:
