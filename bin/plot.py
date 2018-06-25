@@ -29,16 +29,9 @@ def everything_else(command, latest_folder):
             pass
         print(filename)
         f = open(filename,"r")
-
-        # Create lists containing the lines we care about in the file
-        attempts = []
-        counts = []
-        for line in f:
-            if line.find("Attempt") != -1:
-                if line.find("Frequency") == -1:
-                    attempts.append(line)
-                if line.find("Ring") != -1:
-                    counts.append(line)
+        lines = f.readlines()
+        
+        attempts, counts = create_attempts_and_counts(lines)
 
         # Script only works if the ranking don't intermittently change..
         # Let's fix the .elf so that we don't have this problem
@@ -55,6 +48,20 @@ def everything_else(command, latest_folder):
             averages[ringosc_no].append(average)
 
     return averages
+
+
+def create_attempts_and_counts(lines):
+    # Create lists containing the lines we care about in the file
+    attempts = []
+    counts = []
+    for line in lines:
+        if line.find("Attempt") != -1:
+            if line.find("Frequency") == -1:
+                attempts.append(line)
+            if line.find("Ring") != -1:
+                counts.append(line)
+    return attempts, counts
+
 
 
 def get_most_recent_run(command):
