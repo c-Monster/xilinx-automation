@@ -31,21 +31,23 @@ def process_log_file(filename, averages):
     if not filename.endswith(".log"):
         return
     if filename.endswith("characterization_0.log"):
-        #continue
+        # return
         pass
     print(filename)
-    f = open(filename,"r")
-    lines = f.readlines()
+    with open(filename) as f:
+        lines = f.readlines()
+        attempts, counts = create_attempts_and_counts(lines)
 
-    attempts, counts = create_attempts_and_counts(lines)
+        # Script only works if the ranking don't intermittently change..
+        # Let's fix the .elf so that we don't have this problem
+        if not compare_attempts(attempts):
+            print("Rankings inconsistent. Exiting...")
+            exit(1)
 
-    # Script only works if the ranking don't intermittently change..
-    # Let's fix the .elf so that we don't have this problem
-    if not compare_attempts(attempts):
-        print("Rankings inconsistent. Exiting...")
-        exit(1)
+        process_counts(counts, averages)
 
 
+def process_counts(counts, averages):
     # Split the CSV data and get the ring oscillator number and average
     for line in counts:
         split = line.split(',')
