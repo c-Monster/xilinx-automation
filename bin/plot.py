@@ -22,7 +22,7 @@ def everything_else(command, latest_folder):
 
     # Iterate through all .log files
     for filename in sorted(glob.glob(latest_folder + '/*.log')):
-        process_log_file(filename)
+        process_log_file(filename, averages)
 
     return averages
 
