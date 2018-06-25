@@ -66,6 +66,15 @@ def create_attempts_and_counts(lines):
                 attempts.append(line)
             if "Ring" in line:
                 counts.append(line)
+    missing_list = []
+    if not attempts:
+        missing_list.append("attempts")
+    if not counts:
+        missing_list.append("counts")
+    if missing_list:
+        missing_str = " or ".join(missing_list)
+        print("error: {}: no {} found".format(sys.argv[0], missing_str))
+        exit(1)
     return attempts, counts
 
 
